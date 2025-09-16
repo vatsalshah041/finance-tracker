@@ -1,8 +1,8 @@
 package com.example.trial_test.service;
 
-import com.example.trial_test.entity.Expense;
+import com.example.trial_test.entity.Investment;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.example.trial_test.repository.expenseRepository;
+import com.example.trial_test.repository.investmentRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,21 +15,21 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class ExpenseService {
+public class InvestmentService {
 
     @Autowired
-    private expenseRepository expenseRepository;
+    private investmentRepository investmentRepository;
 
-    public void postexp(Expense expense){
+    public void postexp(Investment investment){
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyy");
-        expense.setCode(today.format(formatter));
-        System.out.println(expense);
-        expenseRepository.save(expense);
+        investment.setCode(today.format(formatter));
+        System.out.println(investment);
+        investmentRepository.save(investment);
     }
 
-    public List<Expense> getById(String code){
-        return expenseRepository.findByCode(code).orElse(Collections.emptyList());
+    public List<Investment> getById(String code){
+        return investmentRepository.findByCode(code).orElse(Collections.emptyList());
 
     }
 

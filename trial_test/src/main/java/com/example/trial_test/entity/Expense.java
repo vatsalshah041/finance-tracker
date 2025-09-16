@@ -5,13 +5,12 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "financeDB")
 @Data
 public class Expense {
     @Id
     private ObjectId id;
     private String code;//non unique
-    private int title;
+    private String   title;
     private int value;
 
 }
