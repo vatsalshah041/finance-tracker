@@ -9,8 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Expense {
     @Id
     private ObjectId id;
-    private String code;//non unique
+    private String code; //non unique
     private String   title;
     private int value;
+
+    private ObjectId userID; //reference back to the user
 
 }

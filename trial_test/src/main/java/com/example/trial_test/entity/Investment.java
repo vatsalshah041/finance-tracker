@@ -12,4 +12,6 @@ public class Investment {
     private String title;
     private int value;
     private String inv_type;
+
+    private ObjectId userId; //reference to user
 }

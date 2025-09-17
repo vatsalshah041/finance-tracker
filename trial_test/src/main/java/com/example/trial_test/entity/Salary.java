@@ -10,4 +10,6 @@ public class Salary {
     private ObjectId id;
     private String code;
     private int value;
+
+    private ObjectId userId; // reference to user
 }
