@@ -11,5 +11,5 @@ import java.util.Optional;
 //mongorepositry has all the functions related to mongodb for crud operatioons
 
 public interface expenseRepository extends MongoRepository <Expense, ObjectId> {
-    Optional<List<Expense>> findByCode(String Code);
+    List<Expense> findByCode(String Code);
 }

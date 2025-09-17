@@ -11,4 +11,5 @@ public class Investment {
     private String code;
     private String title;
     private int value;
+    private String inv_type;
 }

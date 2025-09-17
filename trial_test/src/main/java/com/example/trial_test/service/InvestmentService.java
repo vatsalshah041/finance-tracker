@@ -1,5 +1,6 @@
 package com.example.trial_test.service;
 
+import com.example.trial_test.entity.Expense;
 import com.example.trial_test.entity.Investment;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.trial_test.repository.investmentRepository;
@@ -24,13 +25,18 @@ public class InvestmentService {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyy");
         investment.setCode(today.format(formatter));
-        System.out.println(investment);
         investmentRepository.save(investment);
     }
 
     public List<Investment> getById(String code){
         return investmentRepository.findByCode(code).orElse(Collections.emptyList());
 
+    }
+    public double getSumByCode(String code) {
+        List<Investment> investments = getById(code);
+        return investments.stream()
+                .mapToDouble(Investment::getValue)
+                .sum();
     }
 
 

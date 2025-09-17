@@ -28,9 +28,14 @@ public class ExpenseService {
         expenseRepository.save(expense);
     }
 
-    public List<Expense> getById(String code){
-        return expenseRepository.findByCode(code).orElse(Collections.emptyList());
-
+    public List<Expense> getById(String code) {
+        return expenseRepository.findByCode(code);  // already safe, no need for Optional
+    }
+    public double getSumByCode(String code) {
+        List<Expense> expenses = getById(code);
+        return expenses.stream()
+                .mapToDouble(Expense::getValue)
+                .sum();
     }
 
 
