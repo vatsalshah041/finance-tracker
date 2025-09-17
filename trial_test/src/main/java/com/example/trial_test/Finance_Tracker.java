@@ -8,10 +8,10 @@ import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
-public class TrialTestApplication {
+public class Finance_Tracker {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TrialTestApplication.class, args);
+		SpringApplication.run(Finance_Tracker.class, args);
 	}
 	@Bean
 	public PlatformTransactionManager add(MongoDatabaseFactory dbFactory)
