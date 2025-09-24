@@ -9,18 +9,19 @@ import lombok.NonNull;
 import org.bson.types.ObjectId;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Users {
     private ObjectId id;
-    private String user_id;
+    private String userId;
     private String password;
     @NotBlank
     @Email
     private String email;
-    private String user_type;
+    private Set<Role> roles;
 
     private List<Salary> salaryDet;
     private List<Expense> expenseDet;
