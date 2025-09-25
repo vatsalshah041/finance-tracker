@@ -27,7 +27,7 @@ public class JwtUtil {
     }
 
     // Validate token and get claims
-    public static Claims validateToken(String token) throws JwtException {
+    public static Claims  validateToken(String token) throws JwtException {
         return Jwts.parserBuilder()
                 .setSigningKey(KEY)
                 .build()
