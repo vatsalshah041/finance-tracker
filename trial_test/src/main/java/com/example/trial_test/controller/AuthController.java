@@ -6,10 +6,7 @@ import com.example.trial_test.entity.Role;
 import com.example.trial_test.entity.Users;
 import com.example.trial_test.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +22,7 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private AuthenticationManager authManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -51,9 +48,10 @@ public class AuthController {
     // -------------------- LOGIN --------------------
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Users user) {
+        System.out.println("Hellooo");
         try {
             // 1️⃣ Authenticate credentials
-            authManager.authenticate(
+            authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUserId(), user.getPassword())
             );
         } catch (BadCredentialsException e) {
@@ -62,7 +60,7 @@ public class AuthController {
 
         // 2️⃣ Load user from DB
         Users dbUser = userService.findByUserId(user.getUserId());
-
+        System.out.println(dbUser);
         // 3️⃣ Prepare roles for JWT
         Set<String> roles = dbUser.getRoles().stream()
                 .map(Enum::name)
@@ -75,5 +73,10 @@ public class AuthController {
 
         // 5️⃣ Return token to client
         return ResponseEntity.ok(Map.of("token", token));
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "OK";
     }
 }

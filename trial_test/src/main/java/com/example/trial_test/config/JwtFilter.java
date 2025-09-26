@@ -68,5 +68,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 6️⃣ Continue filter chain
         chain.doFilter(request, response);
+
+    }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // Return true if the filter SHOULD NOT run
+        String path = request.getRequestURI();
+        return path.startsWith("/auth/");
+        // This will skip the filter for /auth/login, /auth/signup, etc.
     }
 }

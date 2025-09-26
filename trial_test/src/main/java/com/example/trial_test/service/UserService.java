@@ -21,6 +21,6 @@ public class UserService {
     }
 
     public Users findByUserId(String userId) {
-        return userRepository.findByUserId(userId).orElse(null);
+        return userRepository.findByUserId(userId);
     }
 }

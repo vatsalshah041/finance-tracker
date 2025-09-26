@@ -8,18 +8,24 @@ import org.bson.types.ObjectId;
 import java.util.List;
 import java.util.Set;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Users {
+
+    @EqualsAndHashCode.Include
     private ObjectId id;
+
     private String userId;
     private String password;
+
     @NotBlank
     @Email
     private String email;
-    private Set<Role> roles;
 
+    private Set<Role> roles;
     private List<Salary> salaryDet;
     private List<Expense> expenseDet;
     private List<Investment> investmentDet;
