@@ -3,6 +3,7 @@ package com.example.trial_test.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 
@@ -14,4 +15,5 @@ public class Categories {
     private String type;
     private String title;
 
+    private ObjectId userID; //reference back to the user
 }
