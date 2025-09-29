@@ -1,11 +1,14 @@
 package com.example.trial_test.controller;
 
+import com.example.trial_test.entity.Categories;
 import com.example.trial_test.entity.Users;
+import com.example.trial_test.service.CategoryService;
 import com.example.trial_test.service.UserService;
 import com.example.trial_test.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CategoryService categoryService;
     // ✅ Validate token sent in Authorization header
     @GetMapping("/validate")
     public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authHeader) {
@@ -55,4 +61,14 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/addcat")
+    public ResponseEntity<?> addCategories(@RequestBody Categories newCat,@RequestHeader("Authorization") String authHeader){
+    String userId=jwtUtil.extractUsername(authHeader);
+
+
+        boolean a=categoryService.saveCat(userId,newCat);
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
 }
+
+

@@ -20,7 +20,7 @@ public class CategoryService {
 
     }
 
-    public boolean saveCat(Categories newCat){
+    public boolean saveCat(String userId,Categories newCat){
         categoryRepository.save(newCat);
         return true;
     }
