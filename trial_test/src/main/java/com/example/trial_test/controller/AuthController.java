@@ -1,82 +1,71 @@
 package com.example.trial_test.controller;
-
-
-import com.example.trial_test.config.JwtUtil;
-import com.example.trial_test.entity.Role;
 import com.example.trial_test.entity.Users;
 import com.example.trial_test.service.UserService;
+import com.example.trial_test.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserService userService;
 
-    // -------------------- SIGNUP --------------------
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    // ✅ Signup -> Default Role = USER
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody Users user) {
+        Users savedUser = userService.registerUser(user);
 
-        // 1️⃣ Hash the password
-        user.setPassword(user.getPassword());
-
-        // 2️⃣ Default role if not provided
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            user.setRoles(Set.of(Role.ROLE_USER));
-        }
-
-        // 3️⃣ Save user to MongoDB
-        Users savedUser = userService.saveUser(user);
-
-        return ResponseEntity.ok(savedUser);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "User registered successfully!");
+        response.put("userId", savedUser.getUserId());
+        response.put("roles", savedUser.getRoles());
+        return ResponseEntity.ok(response);
     }
 
-    // -------------------- LOGIN --------------------
+    // ✅ Login -> Authenticate + Generate JWT
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Users user) {
-        System.out.println("Hellooo");
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         try {
-            // 1️⃣ Authenticate credentials
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUserId(), user.getPassword())
+            String userId = loginRequest.get("userId");
+            String password = loginRequest.get("password");
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userId, password)
             );
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(401).body("Invalid credentials");
+
+            // If authentication is successful
+            Users user = userService.getUserByUserId(userId);
+
+            // Add role(s) to JWT claims
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("roles", user.getRoles());
+
+            String token = jwtUtil.generateTokenWithClaims(userId, claims);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("userId", user.getUserId());
+            response.put("roles", user.getRoles());
+
+            return ResponseEntity.ok(response);
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(401).body("Invalid credentials!");
         }
-
-        // 2️⃣ Load user from DB
-        Users dbUser = userService.findByUserId(user.getUserId());
-        System.out.println(dbUser);
-        // 3️⃣ Prepare roles for JWT
-        Set<String> roles = dbUser.getRoles().stream()
-                .map(Enum::name)
-                .collect(Collectors.toSet());
-
-        // 4️⃣ Generate JWT token
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", roles);
-        String token = JwtUtil.generateToken(dbUser.getUserId(), claims);
-
-        // 5️⃣ Return token to client
-        return ResponseEntity.ok(Map.of("token", token));
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        return "OK";
     }
 }

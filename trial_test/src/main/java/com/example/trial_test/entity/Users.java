@@ -25,7 +25,7 @@ public class Users {
     @Email
     private String email;
 
-    private Set<Role> roles;
+    private List<String> roles;
     private List<Salary> salaryDet;
     private List<Expense> expenseDet;
     private List<Investment> investmentDet;
