@@ -2,12 +2,14 @@ package com.example.trial_test.service;
 
 
 import com.example.trial_test.entity.Categories;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.example.trial_test.repository.categoryRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -29,10 +31,12 @@ public class CategoryService {
             return false;
         }
     }
-    public boolean delCat(int catId){
-        Optional<Categories> catDetail=categoryRepository.findById(String.valueOf(catId));
+    public boolean delCat(String userId,String catId){
+        if (!ObjectId.isValid(catId)) return false;
+        ObjectId objId = new ObjectId(catId);
+        Optional<Categories> catDetail=categoryRepository.findById(objId);
         if(catDetail.isPresent()){
-            categoryRepository.deleteById(String.valueOf(catId));
+            categoryRepository.deleteById(objId);
             return true;
         }
         else {
@@ -40,10 +44,15 @@ public class CategoryService {
         }
 
     }
-    public boolean updateCat(Categories updateCat,int catId){
-        Optional<Categories> catDetail=categoryRepository.findById(String.valueOf(catId));
+    public boolean updateCat(Categories updateCat){
+        ObjectId objId = updateCat.getId();
+
+        Optional<Categories> catDetail=categoryRepository.findById(objId);
         if(catDetail.isPresent()){
-            categoryRepository.save(updateCat);
+            Categories ogDet=catDetail.get();
+            if (updateCat.getTitle() != null) ogDet.setTitle(updateCat.getTitle());
+            if (updateCat.getType() != null) ogDet.setType(updateCat.getType());
+            categoryRepository.save(ogDet);
             return true;
         }
         else {

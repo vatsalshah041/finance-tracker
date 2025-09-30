@@ -83,6 +83,24 @@ public class UserController {
 
     }
 
+    @DeleteMapping("/delcat")
+    public ResponseEntity<?> delCategories(@RequestBody Map<String, String> id,@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.substring(7);
+        String userId = jwtUtil.extractUsername(token);
+        boolean b=categoryService.delCat(userId,id.get("id"));
+        return b
+                ? new ResponseEntity<>(true, HttpStatus.OK)
+                : new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/updateCat")
+    public ResponseEntity<?> updateCat(@RequestBody Categories updateCat,@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.substring(7);
+        boolean b=categoryService.updateCat(updateCat);
+        return b
+                ? new ResponseEntity<>(true, HttpStatus.OK)
+                : new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
 
 }
 
