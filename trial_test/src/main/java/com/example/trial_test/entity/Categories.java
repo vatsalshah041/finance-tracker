@@ -15,5 +15,5 @@ public class Categories {
     private String type;
     private String title;
 
-    private String userID; //reference back to the user
+    private String userId; //reference back to the user
 }

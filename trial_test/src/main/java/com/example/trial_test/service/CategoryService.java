@@ -15,14 +15,19 @@ public class CategoryService {
 
     @Autowired
     private categoryRepository categoryRepository;
-    public List<Categories> getCat(){
-        return categoryRepository.findAll();
+    public List<Categories> getCat(String userId){
+        return categoryRepository.findByUserId(userId);
 
     }
 
-    public boolean saveCat(String userId,Categories newCat){
-        categoryRepository.save(newCat);
-        return true;
+    public boolean saveCat(Categories newCat){
+        try {
+            categoryRepository.save(newCat);
+            return true;
+        } catch (Exception e) {
+//            logger.error("Error saving category", e);
+            return false;
+        }
     }
     public boolean delCat(int catId){
         Optional<Categories> catDetail=categoryRepository.findById(String.valueOf(catId));

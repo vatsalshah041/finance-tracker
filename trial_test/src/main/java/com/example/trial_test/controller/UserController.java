@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -62,13 +63,27 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
     @PostMapping("/addcat")
-    public ResponseEntity<?> addCategories(@RequestBody Categories newCat,@RequestHeader("Authorization") String authHeader){
-    String userId=jwtUtil.extractUsername(authHeader);
-
-
-        boolean a=categoryService.saveCat(userId,newCat);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    public ResponseEntity<?> addCategories(@RequestBody Categories newCat,@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String userId = jwtUtil.extractUsername(token);
+        newCat.setUserId(userId);
+        boolean a = categoryService.saveCat(newCat);
+        return a
+                ? ResponseEntity.ok("Category saved successfully")         // if true
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)  // if false
+                .body("Failed to save category");
     }
+
+    @GetMapping("/getcat")
+    public ResponseEntity<List<Categories>> getCategories(@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.substring(7);
+        String userId = jwtUtil.extractUsername(token);
+        List<Categories> cats=categoryService.getCat(userId);
+        return new ResponseEntity<>(cats, HttpStatus.OK);
+
+    }
+
+
 }
 
 

@@ -13,6 +13,6 @@ public class Expense {
     private String   title;
     private int value;
 
-    private String userID; //reference back to the user
+    private String userId; //reference back to the user
 
 }
