@@ -27,9 +27,5 @@ public class Users {
     private String email;
 
     private List<String> roles;
-    private List<Salary> salaryDet = new ArrayList<>();
-    private List<Expense> expenseDet = new ArrayList<>();
-    private List<Investment> investmentDet = new ArrayList<>();
-    private List<Categories> categoryDet = new ArrayList<>();
 
 }

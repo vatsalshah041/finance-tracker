@@ -11,9 +11,9 @@ import org.springframework.data.annotation.Id;
 public class Categories {
 
     @Id
-    private String id;
+    private ObjectId id;
     private String type;
     private String title;
 
-    private ObjectId userID; //reference back to the user
+    private String userID; //reference back to the user
 }

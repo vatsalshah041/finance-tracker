@@ -11,5 +11,5 @@ public class Salary {
     private String code;
     private int value;
 
-    private ObjectId userId; // reference to user
+    private String userId; // reference to user
 }

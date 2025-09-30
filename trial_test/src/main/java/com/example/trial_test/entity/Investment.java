@@ -13,5 +13,5 @@ public class Investment {
     private int value;
     private String inv_type;
 
-    private ObjectId userId; //reference to user
+    private String userId; //reference to user
 }
