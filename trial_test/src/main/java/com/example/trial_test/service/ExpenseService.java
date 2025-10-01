@@ -12,7 +12,9 @@ import javax.sound.midi.SysexMessage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ExpenseService {
@@ -20,12 +22,37 @@ public class ExpenseService {
     @Autowired
     private expenseRepository expenseRepository;
 
-    public void postexp(Expense expense){
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyy");
-        expense.setCode(today.format(formatter));
-        System.out.println(expense);
-        expenseRepository.save(expense);
+    public boolean postexp(Expense expense,String userId){
+
+
+        if(expense.getCode()==null){
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyy");
+            expense.setCode(today.format(formatter));
+        }
+        expense.setUserId(userId);
+        try {
+            expenseRepository.save(expense);
+            return true;
+        }
+        catch(Exception e){
+            return  false;
+        }
+
+    }
+
+    public Map<String, Object> getAll(String userId) {
+        List<Expense> expenses = expenseRepository.findByUserId(userId);
+
+        double total = expenses.stream()
+                .mapToDouble(Expense::getValue) // assuming `value` is a number
+                .sum();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("expenses", expenses);
+        response.put("total", total);
+
+        return response;
     }
 
     public List<Expense> getById(String code) {

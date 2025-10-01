@@ -12,4 +12,5 @@ import java.util.Optional;
 
 public interface expenseRepository extends MongoRepository <Expense, ObjectId> {
     List<Expense> findByCode(String Code);
+    List<Expense> findByUserId(String userId);
 }
