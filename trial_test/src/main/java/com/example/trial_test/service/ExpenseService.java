@@ -55,15 +55,24 @@ public class ExpenseService {
         return response;
     }
 
-    public List<Expense> getById(String code) {
-        return expenseRepository.findByCode(code);  // already safe, no need for Optional
-    }
-    public double getSumByCode(String code) {
-        List<Expense> expenses = getById(code);
-        return expenses.stream()
-                .mapToDouble(Expense::getValue)
+    public Map<String, Object> getById(String code,String userId) {
+        List<Expense> expenses= expenseRepository.findByCode(code);  // already safe, no need for Optional
+        double total = expenses.stream()
+                .mapToDouble(Expense::getValue) // assuming `value` is a number
                 .sum();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("expenses", expenses);
+        response.put("total", total);
+
+        return response;
     }
+//    public double getSumByCode(String code) {
+//        List<Expense> expenses = getById(code);
+//        return expenses.stream()
+//                .mapToDouble(Expense::getValue)
+//                .sum();
+//    }
 
 
 }

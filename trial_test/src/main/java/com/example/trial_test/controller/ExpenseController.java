@@ -63,4 +63,11 @@ public class ExpenseController {
         Map<String, Object> expenseList =expenseService.getAll(userId);
         return new ResponseEntity<>(expenseList,HttpStatus.OK);
     }
+    @GetMapping("/getExpByCode")
+    public ResponseEntity<?> getByCode(@RequestBody Map<String, String> code,@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.substring(7);
+        String userId = jwtUtil.extractUsername(token);
+        Map<String, Object> expenseList =expenseService.getById(code.get("code"),userId);
+        return new ResponseEntity<>(expenseList,HttpStatus.OK);
+    }
 }
