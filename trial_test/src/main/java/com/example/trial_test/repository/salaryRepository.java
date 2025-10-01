@@ -4,8 +4,10 @@ import com.example.trial_test.entity.Salary;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface salaryRepository extends MongoRepository<Salary, ObjectId> {
     Optional<Salary> findByCode(String code);
+    List<Salary> findByUserId(String userId);
 }
