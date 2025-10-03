@@ -13,7 +13,9 @@ import javax.sound.midi.SysexMessage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class InvestmentService {
@@ -21,23 +23,50 @@ public class InvestmentService {
     @Autowired
     private investmentRepository investmentRepository;
 
-    public void postexp(Investment investment){
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyy");
-        investment.setCode(today.format(formatter));
-        investmentRepository.save(investment);
+    public boolean postinv(Investment invest,String userId){
+
+
+        if(invest.getCode()==null){
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyy");
+            invest.setCode(today.format(formatter));
+        }
+        invest.setUserId(userId);
+        try {
+            investmentRepository.save(invest);
+            return true;
+        }
+        catch(Exception e){
+            return  false;
+        }
+
     }
 
-    public List<Investment> getById(String code){
-        return investmentRepository.findByCode(code).orElse(Collections.emptyList());
+    public Map<String, Object> getAll(String userId) {
+        List<Investment> investments = investmentRepository.findByUserId(userId);
 
-    }
-    public double getSumByCode(String code) {
-        List<Investment> investments = getById(code);
-        return investments.stream()
-                .mapToDouble(Investment::getValue)
+        double total = investments.stream()
+                .mapToDouble(Investment::getValue) // assuming `value` is a number
                 .sum();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("expenses", investments);
+        response.put("total", total);
+
+        return response;
     }
 
+    public Map<String, Object> getById(String code,String userId) {
+        List<Investment> investments= investmentRepository.findByCode(code);  // already safe, no need for Optional
+        double total = investments.stream()
+                .mapToDouble(Investment::getValue) // assuming `value` is a number
+                .sum();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("expenses", investments);
+        response.put("total", total);
+
+        return response;
+    }
 
 }

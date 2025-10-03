@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface investmentRepository extends MongoRepository<Investment, ObjectId> {
-    Optional<List<Investment>> findByCode(String Code);
+    List<Investment> findByCode(String Code);
+    List<Investment> findByUserId(String userId);
 
 }
