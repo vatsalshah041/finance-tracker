@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/investment")
+@RequestMapping("/user")
 
 public class InvestmentController {
 
